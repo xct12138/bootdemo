@@ -6,4 +6,8 @@ public class URLUtil {
 				.replaceAll("\\*", "]")
 				.replaceAll(">","/");
 	}
+	
+	public static String encode(String fileName){
+		return fileName.replaceAll("\\[", "<").replaceAll("]", "*");
+	}
 }

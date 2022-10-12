@@ -42,7 +42,7 @@ public class PathController {
 				if (PathFilter.notFilter(file)) {
 					basicFileAttributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
 					boolean isDir = basicFileAttributes.isDirectory();
-					fileData.add(new FileData(file.getName(), isDir, isDir ? 0 : basicFileAttributes.size()));
+					fileData.add(new FileData(URLUtil.encode(file.getName()), isDir, isDir ? 0 : basicFileAttributes.size()));
 				}
 			}
 			result.setData(fileData);

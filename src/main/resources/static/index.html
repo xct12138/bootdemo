@@ -100,7 +100,7 @@
                     let url;
                     if (this.input === '') url = item['name']
                     else url = this.input+'>'+item['name']
-                    reloadTableData(decodeInput(url))
+                    reloadTableData(url)
                     // this.showList = false
                 }
                 let last = this.input.substring(this.input.lastIndexOf(">")+1);
@@ -112,10 +112,10 @@
                 }
             },
 
-            goto:function (event){
-                reloadTableData(decodeInput(this.input))
+            goto:function (){
+                reloadTableData(this.input)
             },
-            back:function (event){
+            back:function (){
                 let index = this.input.lastIndexOf(">")
                 if (this.willDownload){
                     this.willDownload = false
@@ -124,20 +124,16 @@
                 }
                 if (index>0) this.input = this.input.substring(0,index)
                 else this.input = ''
-                reloadTableData(decodeInput(this.input))
+                reloadTableData(this.input)
             },
             download:function (){
-                this.videoSource=decodeInput('/files/'+this.input)
+                this.videoSource='/files/'+this.input
                 /*axios.get('/files/'+this.input).then(function (response) {
                     return response['data']
                 })*/
             }
         }
     })
-
-    function decodeInput(input){
-        return input.replaceAll('[','<').replaceAll(']','*')
-    }
 </script>
 </body>
 </html>
