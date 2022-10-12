@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns="" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>path</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        .div-box,.bar,.bar-background{
+            padding-left: 10%;
+            padding-right: 10%;
+        }
+        .bar{
+            margin-top: 5px;
+        }
+        .bar-background{
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1029;
+            height: 45px;
+            width: 100%;
+            background-color: aliceblue;
+        }
+        #list{
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" class="div-box">
+    <div class="bar-background input-group mb-3">
+    </div>
+    <div class="bar input-group mb-3 fixed-top">
+        <button id="back" v-on:click="back" class="btn btn-outline-secondary" type="button" ><<</button>
+        <input id="input" v-model="input" type="text" class="form-control" placeholder="File Path" aria-label="File Path" aria-describedby="button">
+        <button id="goto" v-on:click="goto" class="btn btn-outline-secondary" type="button" >>></button>
+        <a id="download" v-on:click="download" v-bind:href="videoSource" class="btn btn-outline-secondary" type="button" download>下载</a>
+    </div>
+
+<!--
+    <div v-if="videoSource!==''">
+        <button v-on:click="videoSource=''" class="btn btn-outline-secondary">display</button>
+        <video autoplay="autoplay" controls>
+            <source v-bind:src="videoSource" type="video/mp4">
+        </video>
+    </div>
+-->
+    <div id="list">
+        <div class="list-group">
+            <div v-for="item in list">
+                <a style="width: 100%"
+                   v-on:click="itemClick(item)"
+                   v-bind:class="{active:item.isDir}"
+                   class="list-group-item list-group-item-action btn btn-outline-primary">
+                    <span class="text-left">{{item['name']}}</span>
+                    <span class="text-right" style="float: right">{{item['length']}}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var tabledata=[{
+        'name':"E:",
+        'isDir':true
+    }];
+    reloadTableData('')
+    function reloadTableData(url){
+        url = '/paths/'+url
+        axios.get(url).then(function (response) {
+            vm.showList = true
+            vm.list = response['data']['data'].sort((a,b)=>a['length'].length-b['length'].length)
+        })
+    }
+
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            input:'',
+            list:tabledata,
+            showList:true,
+            videoSource:'',
+            willDownload:false
+        },
+        methods:{
+            itemClick:function (item){
+                console.log(item['name'])
+                if (item['isDir']) {
+                    let url;
+                    if (this.input === '') url = item['name']
+                    else url = this.input+'>'+item['name']
+                    reloadTableData(decodeInput(url))
+                    // this.showList = false
+                }
+                let last = this.input.substring(this.input.lastIndexOf(">")+1);
+                if (!(item['name']==='E:' || last === item['name'])){
+                    if (!this.willDownload){
+                        this.willDownload = !item['isDir']
+                        this.input = this.input===""?item['name']:this.input + ">" + item['name']
+                    }
+                }
+            },
+
+            goto:function (event){
+                reloadTableData(decodeInput(this.input))
+            },
+            back:function (event){
+                let index = this.input.lastIndexOf(">")
+                if (this.willDownload){
+                    this.willDownload = false
+                    // let number = this.input.substring(0,index).lastIndexOf(">");
+                    // index = number>0?number:index
+                }
+                if (index>0) this.input = this.input.substring(0,index)
+                else this.input = ''
+                reloadTableData(decodeInput(this.input))
+            },
+            download:function (){
+                this.videoSource=decodeInput('/files/'+this.input)
+                /*axios.get('/files/'+this.input).then(function (response) {
+                    return response['data']
+                })*/
+            }
+        }
+    })
+
+    function decodeInput(input){
+        return input.replaceAll('[','<').replaceAll(']','*')
+    }
+</script>
+</body>
+</html>
