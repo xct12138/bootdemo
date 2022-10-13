@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 public abstract class AbstractDownload {
@@ -73,6 +74,13 @@ public abstract class AbstractDownload {
 	public AbstractDownload contentReplaceAll(String regex,String replacement){
 		this.regex.add(regex);
 		this.replacement.add(replacement);
+		return this;
+	}
+	public AbstractDownload contentReplaceAll(Map<String,String> regexMapReplacement){
+		regexMapReplacement.forEach((regex,replacement)->{
+			this.regex.add(regex);
+			this.replacement.add(replacement);
+		});
 		return this;
 	}
 	protected void writeTXT(String name, String[] chaptersContent, File parent,boolean order){
