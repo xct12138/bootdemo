@@ -11,5 +11,4 @@ public class Novel {
 	private String novelName;
 	private String url;
 	private String introduction;
-
 }

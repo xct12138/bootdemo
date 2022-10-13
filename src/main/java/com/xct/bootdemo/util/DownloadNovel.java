@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class DownloadNovel extends AbstractDownload {
 	private static final Logger logger = LoggerFactory.getLogger(DownloadNovel.class);
 	

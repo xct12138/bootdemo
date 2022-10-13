@@ -33,6 +33,9 @@ public abstract class AbstractDownload {
 	protected List<String> regex = new ArrayList<>();
 	protected List<String> replacement = new ArrayList<>();
 	
+	protected abstract List<Chapter> getChapterList();
+	
+	protected abstract String getChapter(Chapter chapter,Decode decode);
 	public void download(String novelName, URL novelUrl, File parent,boolean order) {
 		this.url = novelUrl;
 		List<Chapter> chapters = getChapterList();
@@ -55,9 +58,6 @@ public abstract class AbstractDownload {
 			logger.error("countDown is interrupted", e);
 		}
 	}
-	protected abstract List<Chapter> getChapterList();
-	
-	protected abstract String getChapter(Chapter chapter,Decode decode);
 	public void chapterListParentPosition(String attribute,String attributeValue,int index) {
 		this.aParentAttribute = attribute;
 		this.aParentAttributeValue = attributeValue;
