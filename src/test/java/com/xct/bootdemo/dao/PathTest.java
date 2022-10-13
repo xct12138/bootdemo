@@ -1,4 +1,4 @@
-package com.xct.bootdemo.daos;
+package com.xct.bootdemo.dao;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
