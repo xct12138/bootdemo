@@ -39,6 +39,7 @@ public class FileController {
 			//从输入流中读取一定数量的字节，并将其存储在缓冲区字节数组中，读到末尾返回-1
 			while ((len = inputStream.read(b)) > 0) {
 				outputStream.write(b, 0, len);
+				outputStream.flush();
 			}
 		} catch (FileNotFoundException e) {
 			LOG.error("file path is fail:", e);
