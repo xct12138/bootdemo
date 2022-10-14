@@ -34,9 +34,9 @@ public class PathController {
 		File p = new File(E, parent);
 		File[] list = p.listFiles();
 		Result result = new Result(0);
+		result.setMsg("success");
 		List<FileData> fileData = new ArrayList<>();
 		if (list!=null) {
-			result.setMsg("success");
 			BasicFileAttributes basicFileAttributes;
 			for (File file : list) {
 				if (PathFilter.notFilter(file)) {
@@ -46,8 +46,10 @@ public class PathController {
 				}
 			}
 			result.setData(fileData);
-		}else {
-			result.setMsg("fail");
+		}else if (!p.exists())result.setMsg("fail");
+		 else {
+			 fileData.add(new FileData(URLUtil.encode(p.getName()),false,p.length()));
+			 result.setData(fileData);
 		}
 		return result;
 	}
