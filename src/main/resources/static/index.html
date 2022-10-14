@@ -10,9 +10,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <style>
-        .div-box,.bar,.bar-background{
-            padding-left: 10%;
-            padding-right: 10%;
+        @media screen and (min-width: 500px) {
+            .div-box, .bar, .bar-background {
+                padding-left: 10%;
+                padding-right: 10%;
+            }
+            #content-br{
+                display: none;
+            }
+        }
+        @media screen and (max-width: 500px) {
+            .file-size{
+                font-size: 10px;
+            }
+            .file-name{
+                font-size: 12px;
+            }
         }
         .bar{
             margin-top: 5px;
@@ -69,8 +82,9 @@
                    v-on:click="itemClick(item)"
                    v-bind:class="{active:item.isDir}"
                    class="list-group-item list-group-item-action btn btn-outline-primary">
-                    <span class="text-left">{{item['name']}}</span>
-                    <span class="text-right" style="float: right">{{item['length']}}</span>
+                    <span class="file-name text-left">{{item['name']}}</span>
+                    <br id="content-br">
+                    <span class="file-size text-right" style="float: right">{{item['length']}}</span>
                 </a>
             </div>
         </div>
@@ -97,33 +111,33 @@
             willDownload:false
         },
         methods:{
-            itemClick:function (item){
+            itemClick:function (item)
+            {
                 console.log(item['name'])
+
+                let lastIndexAfter = this.input.lastIndexOf(">")+1;
+                let path = this.input.substring(0, lastIndexAfter);
+                this.input = this.input === "" ? item['name'] : this.willDownload ? path + item['name'] : this.input + ">" + item['name']
                 if (item['isDir']) {
-                    let url;
-                    if (this.input === '') url = item['name']
-                    else url = this.input+'>'+item['name']
-                    reloadTableData(url)
+                    reloadTableData(this.input)
+                    this.willDownload = false
                     this.videoSource = "#"
                     downloadA.removeAttribute('download')
-                    // this.showList = false
+                }else {
+                    this.willDownload = true
+                    downloadA.setAttribute('download', item['name'])
+                    this.videoSource = this.input
                 }
-                let last = this.input.substring(this.input.lastIndexOf(">")+1);
-                if (!(item['name']==='E:' || last === item['name'])){
-                    if (!this.willDownload){
-                        this.willDownload = !item['isDir']
-                        if (this.willDownload) downloadA.setAttribute('download',item['name'])
-                        this.input = this.input===""?item['name']:this.input + ">" + item['name']
-                    }
-                }
-            },
+            }
+,
 
             goto:function (){
                 if (isChanged(this.input)) reloadTableData(this.input)
             },
             back:function (){
                 let index = this.input.lastIndexOf(">")
-                this.willDownload = !this.willDownload^false
+                this.willDownload = false
+                this.videoSource = '#'
                 this.input = index>0?this.input.substring(0,index):''
                 downloadA.removeAttribute("download")
                 reloadTableData(this.input)
