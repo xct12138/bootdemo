@@ -105,6 +105,14 @@
             </div>
             <div class="modal-body">
                 <form id="form" class="form-group was-validated">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon">rec..\dow..\upload\</span>
+                        </div>
+                        <br>
+                        <input id="basic-url" name="path" type="text" class="form-control" aria-describedby="basic-addon3">
+                        <label for="basic-url"></label>
+                    </div>
                     <div class="custom-file">
                         <input @change="selected" type="file" class="custom-file-input" name="file" id="validatedCustomFile" required>
                         <label class="custom-file-label" for="validatedCustomFile">{{fileLabel}}</label>
@@ -122,7 +130,6 @@
         </div>
     </div>
 </div>
-
 
 <script src="js/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -150,6 +157,7 @@
                 if (fi.files.length>0){
                     let forms = new FormData()
                     forms.append('file', fi.files.item(0))
+                    forms.append('path', document.getElementById('basic-url').value)
                     axios({
                         method: 'POST',
                         //headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -162,7 +170,7 @@
                         this.success = resp.data.msg.endsWith("success");
                         this.show = true
                         console.log(resp.data.msg)
-                    }).catch((resp)=>{
+                    }).catch(()=>{
                         alert("拒绝访问")
                     });
                 }

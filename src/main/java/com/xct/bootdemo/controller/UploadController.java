@@ -17,17 +17,17 @@ public class UploadController {
 	private static final Logger LOG = LoggerFactory.getLogger(UploadController.class);
 	
 	@PostMapping("/upload")
-	public Result upload(@RequestParam("file")MultipartFile file){
-		return saveFile(file);
+	public Result upload(@RequestParam("path")String path,@RequestParam("file")MultipartFile file){
+		return saveFile(path,file);
 	}
-	@PostMapping("/multiUpload")
+	/*@PostMapping("/multiUpload")
 	public Object multiUpload(@RequestParam("file")MultipartFile[] files){
 		for (MultipartFile f : files){
 			saveFile(f);
 		}
 		return "ok";
-	}
-	private Result saveFile(MultipartFile file){
+	}*/
+	private Result saveFile(String path,MultipartFile file){
 		Result result = new Result();
 		result.setCode(2);
 		if (file.isEmpty()){
@@ -35,10 +35,12 @@ public class UploadController {
 			return result;
 		}
 		String filename = file.getOriginalFilename(); //获取上传文件原来的名称
-		String filePath = "E:\\recreation\\download\\新建文件夹 (2)\\";
+		String filePath = "E:\\recreation\\download\\upload\\"+(path.isEmpty()?"":path+"\\");
 		File temp = new File(filePath);
-		if (!temp.exists()) {
-			temp.mkdirs();
+		if (!temp.exists() && !temp.mkdirs()) {
+			result.setMsg("upload fail");
+			LOG.error("mkdir fails:{}",filePath);
+			return result;
 		}
 		
 		File localFile = new File(filePath+filename);
@@ -46,8 +48,8 @@ public class UploadController {
 			file.transferTo(localFile); //把上传的文件保存至本地
 			LOG.info(file.getOriginalFilename()+" 上传成功");
 		}catch (IOException e){
-			LOG.error("upload fail", e);
 			result.setMsg("upload fail");
+			LOG.error("upload fail", e);
 			return result;
 		}
 		result.setMsg("upload success");
