@@ -47,7 +47,7 @@
 </head>
 <body>
 
-<div id="app" class="div-box">
+<div id="app" class="div-box ">
     <div class="bar-background input-group mb-3">
     </div>
     <div class="bar input-group mb-3 fixed-top">
@@ -73,19 +73,51 @@
                 <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0v-8A.5.5 0 0 1 8 1z"/>
             </svg>
         </a>
+        <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#exampleModal">
+            <svg class="bi bi-upload" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M.5 8a.5.5 0 0 1 .5.5V12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5a.5.5 0 0 1 1 0V12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8.5A.5.5 0 0 1 .5 8zM5 4.854a.5.5 0 0 0 .707 0L8 2.56l2.293 2.293A.5.5 0 1 0 11 4.146L8.354 1.5a.5.5 0 0 0-.708 0L5 4.146a.5.5 0 0 0 0 .708z"/>
+                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0v-8A.5.5 0 0 1 8 2z"/>
+            </svg>
+        </button>
     </div>
 
-    <div id="list">
-        <div class="list-group">
-            <div v-for="item in list">
-                <a style="width: 100%"
-                   v-on:click="itemClick(item)"
-                   v-bind:class="{active:item.isDir}"
-                   class="list-group-item list-group-item-action btn btn-outline-primary">
-                    <span class="file-name text-left">{{item['name']}}</span>
-                    <br id="content-br">
-                    <span class="file-size text-right" style="float: right">{{item['length']}}</span>
-                </a>
+    <div id="list" class="list-group">
+        <div v-for="item in list">
+            <a style="width: 100%"
+               v-on:click="itemClick(item)"
+               v-bind:class="{active:item.isDir}"
+               class="list-group-item list-group-item-action btn btn-outline-primary">
+                <span class="file-name text-left">{{item['name']}}</span>
+                <br id="content-br">
+                <span class="file-size text-right" style="float: right">{{item['length']}}</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div id="upload" class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Upload</h5>
+            </div>
+            <div class="modal-body">
+                <form id="form" class="form-group was-validated">
+                    <div class="custom-file">
+                        <input @change="selected" type="file" class="custom-file-input" name="file" id="validatedCustomFile" required>
+                        <label class="custom-file-label" for="validatedCustomFile">{{fileLabel}}</label>
+                        <div class="invalid-feedback">未选择文件</div>
+                    </div>
+                </form>
+                <div v-if="show" class="alert" :class="{'alert-success':success, 'alert-danger':!success}" role="alert">
+                    {{msg}}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button @click="formReset" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button @click="upload" type="button" class="btn btn-primary" >上传</button>
             </div>
         </div>
     </div>
@@ -95,11 +127,53 @@
 <script src="js/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-    var tabledata=[{
-        'name':"E:",
-        'isDir':true
+    let tabledata = [{
+        'name': "E:",
+        'isDir': true
     }];
     reloadTableData('')
+    let fi = document.getElementById('validatedCustomFile');
+    let uploadVm = new Vue({
+        el:"#upload",
+        data:{
+            fileLabel:"Choose file...",
+            msg:'',
+            show:false,
+            success:false
+        },
+        methods:{
+            selected:function (){
+                fi = document.getElementById('validatedCustomFile');
+                this.fileLabel = fi.files.item(0).name
+            },
+            upload:function(){
+                if (fi.files.length>0){
+                    let forms = new FormData()
+                    forms.append('file', fi.files.item(0))
+                    axios({
+                        method: 'POST',
+                        //headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                        data: forms,
+                        url:'/upload',
+                        processData: false,// 告诉axios不要去处理发送的数据(重要参数)
+                        contentType: false,   // 告诉axios不要去设置Content-Type请求头
+                    }).then((resp)=>{
+                        this.msg = resp.data.msg
+                        this.success = resp.data.msg.endsWith("success");
+                        this.show = true
+                        console.log(resp.data.msg)
+                    }).catch((resp)=>{
+                        alert("拒绝访问")
+                    });
+                }
+            },
+            formReset:function (){
+                this.show = false
+                this.fileLabel = "Choose file..."
+                document.getElementById("form").reset()
+            }
+        }
+    })
     let vm = new Vue({
         el:'#app',
         data:{
@@ -114,7 +188,6 @@
             itemClick:function (item)
             {
                 console.log(item['name'])
-
                 let lastIndexAfter = this.input.lastIndexOf(">")+1;
                 let path = this.input.substring(0, lastIndexAfter);
                 this.input = this.input === "" ? item['name'] : this.willDownload ? path + item['name'] : this.input + ">" + item['name']
@@ -128,9 +201,7 @@
                     downloadA.setAttribute('download', item['name'])
                     this.videoSource = this.input
                 }
-            }
-,
-
+            },
             goto:function (){
                 if (isChanged(this.input)) reloadTableData(this.input)
             },
