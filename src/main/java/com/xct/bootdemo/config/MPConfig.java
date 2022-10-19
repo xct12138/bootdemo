@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class MPConfig {
 	
 	@Bean
-	public MybatisPlusInterceptor mybatisPlusInterceptor(){
+	public MybatisPlusInterceptor mybatisPlusInterceptor() {
 		MybatisPlusInterceptor mpi = new MybatisPlusInterceptor();
 		mpi.addInnerInterceptor(new PaginationInnerInterceptor());
 		return mpi;

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns="" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>path</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        @media screen and (min-width: 500px) {
+            .div-box, .bar, .bar-background {
+                padding-left: 10%;
+                padding-right: 10%;
+            }
+            #content-br{
+                display: none;
+            }
+        }
+        @media screen and (max-width: 500px) {
+            .file-size{
+                font-size: 10px;
+            }
+            .file-name{
+                font-size: 12px;
+            }
+        }
+        .bar{
+            margin-top: 5px;
+        }
+        .bar-background{
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1029;
+            height: 45px;
+            width: 100%;
+            background-color: aliceblue;
+        }
+        #list{
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" class="div-box ">
+    <div class="bar-background input-group mb-3">
+    </div>
+    <div class="bar input-group mb-3 fixed-top">
+        <a href="novelDownload.html" class="btn btn-outline-secondary">
+            <svg class="bi bi-file-earmark-arrow-down" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 1h5v1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6h1v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2z"/>
+                <path d="M9 4.5V1l5 5h-3.5A1.5 1.5 0 0 1 9 4.5z"/>
+                <path fill-rule="evenodd" d="M5.646 9.146a.5.5 0 0 1 .708 0L8 10.793l1.646-1.647a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 0-.708z"/>
+                <path fill-rule="evenodd" d="M8 6a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0v-4A.5.5 0 0 1 8 6z"/>
+            </svg>
+        </a>
+        <button id="back" v-on:click="back" class="btn btn-outline-secondary" type="button" >
+            <svg class="bi bi-chevron-left" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+            </svg>
+        </button>
+        <input id="input" v-model="input" type="text" class="form-control" placeholder="File Path" aria-label="File Path" aria-describedby="button">
+        <button id="goto" v-on:click="goto" class="btn btn-outline-secondary" type="button" >
+            <svg class="bi bi-chevron-right" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </button>
+        <a id="download"
+           :href="videoSource"
+           @click="download"
+           class="btn btn-outline-secondary"
+           type="button">
+            <svg class="bi bi-download" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M.5 8a.5.5 0 0 1 .5.5V12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5a.5.5 0 0 1 1 0V12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8.5A.5.5 0 0 1 .5 8z"/>
+                <path fill-rule="evenodd" d="M5 7.5a.5.5 0 0 1 .707 0L8 9.793 10.293 7.5a.5.5 0 1 1 .707.707l-2.646 2.647a.5.5 0 0 1-.708 0L5 8.207A.5.5 0 0 1 5 7.5z"/>
+                <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0v-8A.5.5 0 0 1 8 1z"/>
+            </svg>
+        </a>
+        <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#exampleModal">
+            <svg class="bi bi-upload" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M.5 8a.5.5 0 0 1 .5.5V12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5a.5.5 0 0 1 1 0V12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8.5A.5.5 0 0 1 .5 8zM5 4.854a.5.5 0 0 0 .707 0L8 2.56l2.293 2.293A.5.5 0 1 0 11 4.146L8.354 1.5a.5.5 0 0 0-.708 0L5 4.146a.5.5 0 0 0 0 .708z"/>
+                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0v-8A.5.5 0 0 1 8 2z"/>
+            </svg>
+        </button>
+    </div>
+
+    <div id="list" class="list-group">
+        <div v-for="item in list">
+            <a style="width: 100%"
+               v-on:click="itemClick(item)"
+               v-bind:class="{active:item.isDir}"
+               class="list-group-item list-group-item-action btn btn-outline-primary">
+                <span class="file-name text-left">{{item['name']}}</span>
+                <br id="content-br">
+                <span class="file-size text-right" style="float: right">{{item['length']}}</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div id="upload" class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Upload</h5>
+            </div>
+            <div class="modal-body">
+                <form id="form" class="form-group was-validated">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon">rec..\dow..\upload\</span>
+                        </div>
+                        <br>
+                        <input id="basic-url" name="path" type="text" class="form-control" aria-describedby="basic-addon3">
+                        <label for="basic-url"></label>
+                    </div>
+                    <div class="custom-file">
+                        <input @change="selected" type="file" class="custom-file-input" name="file" id="validatedCustomFile" required>
+                        <label class="custom-file-label" for="validatedCustomFile">{{fileLabel}}</label>
+                        <div class="invalid-feedback">未选择文件</div>
+                    </div>
+                </form>
+                <div v-if="show" class="alert" :class="{'alert-success':success, 'alert-danger':!success}" role="alert">
+                    {{msg}}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button @click="formReset" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button @click="upload" type="button" class="btn btn-primary" >上传</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    let tabledata = [{
+        'name': "E:",
+        'isDir': true
+    }];
+    reloadTableData('')
+    let fi = document.getElementById('validatedCustomFile');
+    let uploadVm = new Vue({
+        el:"#upload",
+        data:{
+            fileLabel:"Choose file...",
+            msg:'',
+            show:false,
+            success:false
+        },
+        methods:{
+            selected:function (){
+                fi = document.getElementById('validatedCustomFile');
+                this.fileLabel = fi.files.item(0).name
+                this.show=false
+            },
+            upload:function(){
+                if (fi.files.length>0){
+                    let forms = new FormData()
+                    forms.append('file', fi.files.item(0))
+                    forms.append('path', document.getElementById('basic-url').value)
+                    axios({
+                        method: 'POST',
+                        //headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                        data: forms,
+                        url:'/upload',
+                        processData: false,// 告诉axios不要去处理发送的数据(重要参数)
+                        contentType: false,   // 告诉axios不要去设置Content-Type请求头
+                    }).then((resp)=>{
+                        this.msg = resp.data.msg
+                        this.success = resp.data.msg.endsWith("success");
+                        this.show = true
+                        console.log(resp.data.msg)
+                    }).catch(()=>{
+                        alert("拒绝访问")
+                    });
+                }
+            },
+            formReset:function (){
+                this.show = false
+                this.fileLabel = "Choose file..."
+                document.getElementById("form").reset()
+            }
+        }
+    })
+    let vm = new Vue({
+        el:'#app',
+        data:{
+            input:'',
+            list:tabledata,
+            showList:true,
+            videoSource:'#',
+            fileName:'',
+            willDownload:false
+        },
+        methods:{
+            itemClick:function (item)
+            {
+                console.log(item['name'])
+                let lastIndexAfter = this.input.lastIndexOf(">")+1;
+                let path = this.input.substring(0, lastIndexAfter);
+                this.input = this.input === "" ? item['name'] : this.willDownload ? path + item['name'] : this.input + ">" + item['name']
+                if (item['isDir']) {
+                    reloadTableData(this.input)
+                    this.willDownload = false
+                    this.videoSource = "#"
+                    downloadA.removeAttribute('download')
+                }else {
+                    this.willDownload = true
+                    downloadA.setAttribute('download', item['name'])
+                    this.videoSource = this.input
+                }
+            },
+            goto:function (){
+                if (isChanged(this.input)) reloadTableData(this.input)
+            },
+            back:function (){
+                let index = this.input.lastIndexOf(">")
+                this.willDownload = false
+                this.videoSource = '#'
+                this.input = index>0?this.input.substring(0,index):''
+                downloadA.removeAttribute("download")
+                reloadTableData(this.input)
+            },
+            download:function (){
+                if (this.willDownload){
+                    this.videoSource='/files/'+this.input
+                }
+            },
+
+        }
+    });
+
+    function reloadTableData(url){
+        url = '/paths/'+url
+        axios.get(url).then(function (response) {
+            vm.showList = true
+            vm.list = response['data']['data'].sort((a,b)=>a['length'].length-b['length'].length)
+        })
+    }
+
+    let downloadA = document.getElementById("download");
+    let lastInput = "";
+
+    function isChanged(currentInput) {
+        if (currentInput !== lastInput){
+            lastInput = currentInput
+            return true
+        }else return false
+    }
+</script>
+</body>
+</html>

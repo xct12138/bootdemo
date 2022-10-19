@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录/注册</title>
+<!--    <link rel="stylesheet" href="css/login.css">-->
+    <link rel="stylesheet" href="css/signinStyle.css">
+    <style>
+        .background-c-login{
+            align-items: center;
+            place-items: center;
+            background: url("/image/bg1.jpg") no-repeat fixed center;
+            background-size: cover;
+            display: grid;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body class="background-c-login">
+<div class="container" id=".container">
+    <div class="container_from container--signup">
+        <form method="post" action="${pageContext.request.contextPath}/signup" class="from" id="form1" onsubmit="return noRepeatSubmit()">
+            <h2 class="form_title">注册</h2>
+            <label>
+                <input class="input" name="upUname" placeholder="User name" type="text" required>
+                <input class="input" name="upPassword" placeholder="password" type="password" required>
+                <input class="input" name="email" placeholder="Email" type="email">
+            </label>
+            <input name="tj" class="btn" value="注册" type="submit">
+        </form>
+    </div>
+    <div class="container_from container--signin">
+        <form method="post" action="${pageContext.request.contextPath}/signin" class="from" id="form2" onsubmit="return noRepeatSubmit()">
+            <h2 class="form_title">登录</h2>
+            <label>
+                <input class="input" name="uname" placeholder="name/email" type="text" required>
+                <input class="input" name="password" placeholder="password" type="password" required>
+            </label>
+            <a href="#" class="link">忘记密码</a>
+            <input name="tj" type="submit" class="btn" value="登录">
+        </form>
+    </div>
+
+    <div class="container_overlay">
+        <div class="overlay">
+            <div class="overlay_panel overlay--left">
+                <button class="btn" id="signIn">已有账号，直接登陆</button>
+            </div>
+            <div class="overlay_panel overlay--right">
+                <button class="btn" id="signUp">没有账号，注册</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- partial -->
+<script>
+    const signInBtn = document.getElementById("signIn");
+    const signUpBtn = document.getElementById("signUp");
+    const firstForm = document.getElementById("form1");
+    const secondForm = document.getElementById("form2");
+    const container = document.querySelector(".container");
+    signInBtn.addEventListener("click", () => {
+        container.classList.remove("right-panel-active");
+    });
+    signUpBtn.addEventListener("click", () => {
+        container.classList.add("right-panel-active");
+    });
+    firstForm.addEventListener("submit", (e) => e.preventDefault());
+    secondForm.addEventListener("submit", (e) => e.preventDefault());
+
+    let isCommitted = false;//表单是否已经提交标识，默认为false
+    function noRepeatSubmit(){
+        if(isCommitted===false){
+            isCommitted = true;//提交表单后，将表单是否已经提交标识设置为true
+            return true;//返回true让表单正常提交
+        }else{
+            return false;//返回false那么表单将不提交
+        }
+    }
+    function exit() {
+        alert("确认退出？");
+        document.cookie="user=;expires=Thu, 01 Jan 2020 00:00:00 GMT";
+    }
+</script>
+</body>
+</html>

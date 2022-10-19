@@ -12,11 +12,11 @@ spring:
       max-file-size: 2GB
       max-request-size: 10GB
 
+
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   check-config-location: false
-  mapper-locations: classpath:com/xct/bootdemo/dao/*
 
 logging:
   level:
