@@ -1,7 +1,7 @@
 package com.xct.bootdemo.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xct.bootdemo.beans.Result;
+import com.xct.bootdemo.bean.Result;
 import com.xct.bootdemo.util.DownloadNovel;
 import lombok.Data;
 import lombok.ToString;

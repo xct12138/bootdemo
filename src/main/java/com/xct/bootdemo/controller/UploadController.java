@@ -1,6 +1,6 @@
 package com.xct.bootdemo.controller;
 
-import com.xct.bootdemo.beans.Result;
+import com.xct.bootdemo.bean.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;

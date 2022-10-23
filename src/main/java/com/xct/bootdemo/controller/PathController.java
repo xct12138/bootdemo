@@ -1,7 +1,7 @@
 package com.xct.bootdemo.controller;
 
-import com.xct.bootdemo.beans.FileData;
-import com.xct.bootdemo.beans.Result;
+import com.xct.bootdemo.bean.FileData;
+import com.xct.bootdemo.bean.Result;
 import com.xct.bootdemo.util.PathFilter;
 import com.xct.bootdemo.util.URLUtil;
 import lombok.SneakyThrows;

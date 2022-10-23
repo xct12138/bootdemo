@@ -1,6 +1,7 @@
 package com.xct.bootdemo.dao;
 
-import com.xct.bootdemo.beans.User;
+import com.xct.bootdemo.bean.Cartoon;
+import com.xct.bootdemo.bean.User;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,5 +19,9 @@ public class PathTest {
 	public void test(){
 		User user = userMapper.searchUser("123", "123");
 		Log.info(user.toString());
+	}
+	@Test
+	public void test(@Autowired CartoonMapper ctMapper){
+		System.out.println(ctMapper.insert(new Cartoon()));
 	}
 }

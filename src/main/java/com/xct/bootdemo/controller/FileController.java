@@ -1,6 +1,5 @@
 package com.xct.bootdemo.controller;
 
-import com.xct.bootdemo.beans.Result;
 import com.xct.bootdemo.util.URLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 @RestController

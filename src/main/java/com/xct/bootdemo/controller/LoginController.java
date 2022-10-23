@@ -1,7 +1,7 @@
 package com.xct.bootdemo.controller;
 
-import com.xct.bootdemo.beans.Result;
-import com.xct.bootdemo.beans.User;
+import com.xct.bootdemo.bean.Result;
+import com.xct.bootdemo.bean.User;
 import com.xct.bootdemo.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

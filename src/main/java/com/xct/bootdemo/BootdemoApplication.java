@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 
 @SpringBootApplication
-@ServletComponentScan
-@MapperScan("com.xct.bootdemo.dao")
+//@ServletComponentScan
+@MapperScan({"com.xct.bootdemo.dao"})
 public class BootdemoApplication {
 	
 	public static void main(String[] args) {

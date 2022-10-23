@@ -1,6 +1,6 @@
 package com.xct.bootdemo.controller;
 
-import com.xct.bootdemo.beans.Result;
+import com.xct.bootdemo.bean.Result;
 import com.xct.bootdemo.service.DownloadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +28,7 @@ public class DownloadNovelController {
 		Result result = new Result(3);
 		try (Reader reader = request.getReader()){
 			result = downloadService.downloadNovel(reader, result);
+			
 		} catch (IOException e) {
 			result.setMsg("fail");
 			LOG.error("request.getReader method exception", e);

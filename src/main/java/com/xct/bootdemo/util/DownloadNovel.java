@@ -20,15 +20,15 @@ public class DownloadNovel extends AbstractDownload {
 	protected List<Chapter> getChapterList(){
 		List<Chapter> chapters1 = new ArrayList<>();
 		Document catalogue = getDocument(url);
-		
+		String protocolHeader = url.getProtocol();
 		logger.info("Catalogue downloaded finished");
 		Elements parents = catalogue.getElementsByAttributeValue(aParentAttribute, aParentAttributeValue);
 		Elements catalogueURLList = parents.get(aParentIndex).getElementsByTag("a");
 		for (int i = 6; i < catalogueURLList.size(); i++) {
 			String name = catalogueURLList.get(i).text();
 			String href = catalogueURLList.get(i).attr("href");
-			if (!href.startsWith("https://")){
-				href = "https://"+url.getAuthority()+href;
+			if (!href.startsWith(protocolHeader)){
+				href = protocolHeader+"://" +url.getAuthority()+href;
 			}
 			chapters1.add(new Chapter(name,href));
 		}
